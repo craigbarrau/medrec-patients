@@ -1,0 +1,22 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+  <changeSet author="sushil.vishwanathan" id="medrec-seed-patients-1">
+    <insert tableName="patients">
+      <column name="email" value="fred@golf.com" />
+      <column name="firstName" value="Fred" />
+      <column name="middleName" value="I" />
+      <column name="lastName" value="Winner" />
+      <column name="gender" value="MALE" />
+      <column name="status" value="APPROVED" />
+    </insert>
+    <insert tableName="patients">
+      <column name="email" value="larry@bball.com" />
+      <column name="firstName" value="Larry" />
+      <column name="middleName" value="J" />
+      <column name="lastName" value="Parrot" />
+      <column name="gender" value="MALE" />
+      <column name="status" value="APPROVED" />
+    </insert>
+  </changeSet>
+</databaseChangeLog>

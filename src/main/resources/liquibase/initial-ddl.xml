@@ -1,0 +1,182 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-1">
+    <createTable tableName="drugs">
+      <column autoIncrement="true" name="id" type="BIGINT">
+        <constraints primaryKey="true"/>
+      </column>
+      <column name="version" type="INT"/>
+      <column name="name" type="VARCHAR(255)"/>
+      <column name="price" type="DECIMAL(19, 2)"/>
+    </createTable>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-2">
+    <createTable tableName="patients">
+      <column autoIncrement="true" name="id" type="BIGINT">
+        <constraints primaryKey="true"/>
+      </column>
+      <column name="version" type="INT"/>
+      <column name="email" type="VARCHAR(255)"/>
+      <column name="password" type="VARCHAR(255)"/>
+      <column name="username" type="VARCHAR(255)"/>
+      <column name="firstName" type="VARCHAR(255)"/>
+      <column name="lastName" type="VARCHAR(255)"/>
+      <column name="middleName" type="VARCHAR(255)"/>
+      <column name="phone" type="VARCHAR(255)"/>
+      <column name="city" type="VARCHAR(255)"/>
+      <column name="country" type="VARCHAR(255)"/>
+      <column name="state" type="VARCHAR(255)"/>
+      <column name="street1" type="VARCHAR(255)"/>
+      <column name="street2" type="VARCHAR(255)"/>
+      <column name="zip" type="VARCHAR(255)"/>
+      <column name="dob" type="date"/>
+      <column name="gender" type="VARCHAR(255)"/>
+      <column name="ssn" type="VARCHAR(255)"/>
+      <column name="status" type="VARCHAR(255)"/>
+    </createTable>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-3">
+    <createTable tableName="patients_records">
+      <column name="patients_id" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="records_id" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-4">
+    <createTable tableName="physicians">
+      <column autoIncrement="true" name="id" type="BIGINT">
+        <constraints primaryKey="true"/>
+      </column>
+      <column name="version" type="INT"/>
+      <column name="email" type="VARCHAR(255)"/>
+      <column name="password" type="VARCHAR(255)"/>
+      <column name="username" type="VARCHAR(255)"/>
+      <column name="firstName" type="VARCHAR(255)"/>
+      <column name="lastName" type="VARCHAR(255)"/>
+      <column name="middleName" type="VARCHAR(255)"/>
+      <column name="phone" type="VARCHAR(255)"/>
+    </createTable>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-5">
+    <createTable tableName="prescriptions">
+      <column autoIncrement="true" name="id" type="BIGINT">
+        <constraints primaryKey="true"/>
+      </column>
+      <column name="version" type="INT"/>
+      <column name="date_prescribed" type="date"/>
+      <column name="dosage" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="frequency" type="VARCHAR(255)"/>
+      <column name="instructions" type="VARCHAR(255)"/>
+      <column name="refills_remaining" type="INT"/>
+      <column name="drug_id" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-6">
+    <createTable tableName="records">
+      <column autoIncrement="true" name="id" type="BIGINT">
+        <constraints primaryKey="true"/>
+      </column>
+      <column name="version" type="INT"/>
+      <column name="CREATE_DATE" type="date"/>
+      <column name="diagnosis" type="VARCHAR(255)"/>
+      <column name="notes" type="VARCHAR(255)"/>
+      <column name="symptoms" type="VARCHAR(255)"/>
+      <column name="diastolic_blood_pressure" type="DOUBLE"/>
+      <column name="height" type="DOUBLE"/>
+      <column name="pulse" type="DOUBLE"/>
+      <column name="systolic_blood_pressure" type="DOUBLE"/>
+      <column name="temperature" type="DOUBLE"/>
+      <column name="weight" type="DOUBLE"/>
+      <column name="patient_id" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="physician_id" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-7">
+    <createTable tableName="records_prescriptions">
+      <column name="records_id" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="prescriptions_id" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-8">
+    <addUniqueConstraint columnNames="email" constraintName="UK_a370hmxgv0l5c9panryr1ji7d" tableName="patients"/>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-9">
+    <addUniqueConstraint columnNames="records_id" constraintName="UK_c11wcappkqodfhgcdkf35lcm8" tableName="patients_records"/>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-10">
+    <addUniqueConstraint columnNames="email" constraintName="UK_d6bu5nwuyfsrc905rtpxby3hr" tableName="physicians"/>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-11">
+    <addUniqueConstraint columnNames="prescriptions_id" constraintName="UK_emb7m8cs4965m06jn4312fh8o" tableName="records_prescriptions"/>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-12">
+    <addUniqueConstraint columnNames="username" constraintName="UK_myobm1tnc2tqmyk2fxl8ujpfj" tableName="patients"/>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-13">
+    <addUniqueConstraint columnNames="ssn" constraintName="UK_nuglsbp5ykgwk71du7k8bxkeg" tableName="patients"/>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-14">
+    <addUniqueConstraint columnNames="username" constraintName="UK_qa6r6fi9k9pogc7c7i2vs9wib" tableName="physicians"/>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-15">
+    <createIndex indexName="FK_9po518qahs8bes6tgnpkc0w4v" tableName="records">
+      <column name="physician_id"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-16">
+    <createIndex indexName="FK_bb1pd9bvjvkj79b5bl8mw4vk9" tableName="records">
+      <column name="patient_id"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-17">
+    <createIndex indexName="FK_clnitansj0m3x7g2eu99xrfgn" tableName="records_prescriptions">
+      <column name="records_id"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-18">
+    <createIndex indexName="FK_f49yc37vu3o3rdg5qfl4e20dy" tableName="patients_records">
+      <column name="patients_id"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-19">
+    <createIndex indexName="FK_ot9iblayn09jkg94pgnhyf4tc" tableName="prescriptions">
+      <column name="drug_id"/>
+    </createIndex>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-20">
+    <addForeignKeyConstraint baseColumnNames="physician_id" baseTableName="records" constraintName="FK_9po518qahs8bes6tgnpkc0w4v" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="physicians"/>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-21">
+    <addForeignKeyConstraint baseColumnNames="patient_id" baseTableName="records" constraintName="FK_bb1pd9bvjvkj79b5bl8mw4vk9" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="patients"/>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-22">
+    <addForeignKeyConstraint baseColumnNames="records_id" baseTableName="patients_records" constraintName="FK_c11wcappkqodfhgcdkf35lcm8" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="records"/>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-23">
+    <addForeignKeyConstraint baseColumnNames="records_id" baseTableName="records_prescriptions" constraintName="FK_clnitansj0m3x7g2eu99xrfgn" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="records"/>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-24">
+    <addForeignKeyConstraint baseColumnNames="prescriptions_id" baseTableName="records_prescriptions" constraintName="FK_emb7m8cs4965m06jn4312fh8o" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="prescriptions"/>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-25">
+    <addForeignKeyConstraint baseColumnNames="patients_id" baseTableName="patients_records" constraintName="FK_f49yc37vu3o3rdg5qfl4e20dy" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="patients"/>
+  </changeSet>
+  <changeSet author="sushil.vishwanathan" id="medrec-ddl-26">
+    <addForeignKeyConstraint baseColumnNames="drug_id" baseTableName="prescriptions" constraintName="FK_ot9iblayn09jkg94pgnhyf4tc" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="drugs"/>
+  </changeSet>
+</databaseChangeLog>

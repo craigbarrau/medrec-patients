@@ -1,0 +1,20 @@
+version: '2'
+services:
+  web:
+    image: craigbarrau/medrec-patients
+    depends_on:
+     - db
+    # Comment the lines below if you want to just allow only https access. i.e. Enabling HTTPS
+    ports:
+     - "10011:8080"
+  db:
+    image: mysql:5.7.17
+    environment:
+     - MYSQL_ROOT_PASSWORD=welcome1
+     - MYSQL_DATABASE=medrec 
+     - MYSQL_USER=medrec
+     - MYSQL_PASSWORD=welcome1
+    expose:
+     - "3306"
+    ports:
+     - "3306:3306"

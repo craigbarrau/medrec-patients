@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:aop="http://www.springframework.org/schema/aop" xmlns:jaxrs="http://cxf.apache.org/jaxrs" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+  xmlns:p="http://www.springframework.org/schema/p"
+  xsi:schemaLocation="
+    http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://cxf.apache.org/jaxrs
+    http://cxf.apache.org/schemas/jaxrs.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/data/jpa
+    http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+  <!-- For auto-scanning of annotated Spring Beans -->
+  <context:component-scan base-package="com.oracle.medrec" />
+
+  <!-- AspectJ setup in case aspects are required -->
+  <aop:aspectj-autoproxy proxy-target-class="true" />
+
+  <!-- Persistence Configuration -->
+
+  <!-- Transaction Manager -->
+  <bean id="com.oracle.medrec.jpa.transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager" p:entityManagerFactory-ref="com.oracle.medrec.jpa.entityManagerFactory" />
+
+  <!-- To ensure that beans annotated with @Transactional are managed by this transaction manager -->
+  <tx:annotation-driven transaction-manager="com.oracle.medrec.jpa.transactionManager" />
+
+  <!-- The Data Source -->
+  <bean id="com.oracle.medrec.datasource" class="org.springframework.jndi.JndiObjectFactoryBean">
+    <property name="jndiName" value="java:comp/env/jdbc/medrec" />
+  </bean>
+
+  <!-- JPA repositories -->
+  <jpa:repositories base-package="com.oracle.medrec" entity-manager-factory-ref="com.oracle.medrec.jpa.entityManagerFactory" transaction-manager-ref="com.oracle.medrec.jpa.transactionManager" />
+
+  <!-- JPA vendor adapter -->
+  <bean id="com.oracle.medrec.jpa.vendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" p:database="MYSQL" p:showSql="false" />
+
+  <!-- Entity Manager Factory -->
+  <bean id="com.oracle.medrec.jpa.entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" p:dataSource-ref="com.oracle.medrec.datasource"
+    p:jpaVendorAdapter-ref="com.oracle.medrec.jpa.vendorAdapter" depends-on="com.oracle.medrec.liquibase">
+    <property name="persistenceUnitName" value="com.oracle.medrec.jpa.persistenceUnit" />
+    <property name="packagesToScan" value="com.oracle.medrec" />
+    <property name="jpaProperties">
+      <props>
+        <prop key="hibernate.archive.autodetection">class</prop>
+        <prop key="hibernate.hbm2ddl.auto">validate</prop>
+        <prop key="hibernate.listeners.envers.autoRegister">false</prop>
+        <prop key="hibernate.bytecode.use_reflection_optimizer">false</prop>
+        <prop key="hibernate.jdbc.batch_size">20</prop>
+        <prop key="hibernate.order_inserts">true</prop>
+        <prop key="hibernate.order_updates">true</prop>
+      </props>
+    </property>
+  </bean>
+
+  <!-- Liquibase Bootstrap -->
+  <bean id="com.oracle.medrec.liquibase" class="liquibase.integration.spring.SpringLiquibase">
+    <property name="dataSource" ref="com.oracle.medrec.datasource" />
+    <property name="changeLog" value="classpath:medrec-changelog.xml" />
+  </bean>
+
+  <!-- JAX-RS setup -->
+  <jaxrs:server address="/" />
+</beans>

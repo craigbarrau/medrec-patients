@@ -1,0 +1,64 @@
+box: maven
+dev:
+  steps:
+    - internal/watch:
+        code: mvn clean install
+        reload: true
+
+# Build definition
+build:
+  # The steps that will be executed on build
+  steps:
+    - script:
+       code: export DOCKER_TAG=`echo $WERCKER_GIT_COMMIT | cut -c1-8`
+    - xenoterracide/maven:
+        goals: test
+    - xenoterracide/maven:
+        goals: install
+    - script:
+       code: echo "Pushing Docker with tag $DOCKER_TAG"
+    - internal/docker-push:
+        username: $DOCKERHUB_USERNAME
+        password: $DOCKERHUB_PASSWORD
+        repository: craigbarrau/medrec-patients:$DOCKER_TAG
+
+integration_test:
+  steps:
+    - script:
+        name: deploy to oracle container cloud
+        code: |
+          APP_FRIENDLY_NAME=MedRec-Patients
+          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+          POSTDATA=$(cat <<ENDOFTEMPLATE
+          {
+            "deployment_id": "medrec-patients-${TIMESTAMP}",
+            "deployment_name": "${APP_FRIENDLY_NAME}",
+            "desired_state": 1,
+            "placement": {
+              "pool_id": "default"
+            },
+            "quantities": {
+              "app": ${SCALE_AMOUNT}
+            },
+            "stack": {
+              "content": "version: 2\nservices:\n  app:\n    image: craigbarrau/medrec-physicians\n    ports:\n      - '8080:10010/tcp'\n    environment:\n      - 'occs:availability=per-pool'\n      - 'occs:scheduler=random'",
+              "service_id": "app",
+              "service_name": "${APP_FRIENDLY_NAME}",
+              "subtype": "service"
+            }
+          }
+          ENDOFTEMPLATE
+          )
+          echo $POSTDATA
+          env
+          curl -k -X POST -H "Authorization: Bearer ${API_TOKEN}" -d "${POSTDATA}" ${SERVICE_MANAGER}/api/v2/deployments/
+
+acceptance_test:
+  steps:
+    - script:
+       code: echo "PLACEHOLDER"   
+
+production:
+  steps:
+    - script:
+       code: echo "PLACEHOLDER"
