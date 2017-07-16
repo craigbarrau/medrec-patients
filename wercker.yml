@@ -9,18 +9,10 @@ dev:
 build:
   # The steps that will be executed on build
   steps:
-    - script:
-       code: export DOCKER_TAG=`echo $WERCKER_GIT_COMMIT | cut -c1-8`
     - xenoterracide/maven:
         goals: test
     - xenoterracide/maven:
         goals: install
-    - script:
-       code: echo "Pushing Docker with tag $DOCKER_TAG"
-    - internal/docker-push:
-        username: $DOCKERHUB_USERNAME
-        password: $DOCKERHUB_PASSWORD
-        repository: craigbarrau/medrec-patients:$DOCKER_TAG
 
 integration_test:
   steps:
