@@ -33,7 +33,7 @@ integration_test:
               "app": ${SCALE_AMOUNT}
             },
             "stack": {
-              "content": "version: 2\nservices:\n  app:\n    image: craigbarrau/medrec-physicians\n    ports:\n      - '8080:10010/tcp'\n    environment:\n      - 'occs:availability=per-pool'\n      - 'occs:scheduler=random'",
+              "content": "version: 2\nservices:\n  app:\n    image: craigbarrau/medrec-patients\n    ports:\n      - '8081:8080/tcp'\n    environment:\n      - 'occs:availability=per-pool'\n      - 'occs:scheduler=random'",
               "service_id": "app",
               "service_name": "${APP_FRIENDLY_NAME}",
               "subtype": "service"
