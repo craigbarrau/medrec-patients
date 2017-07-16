@@ -1,3 +1,9 @@
+FROM maven as build
+
+ADD . /src
+WORKDIR /src
+RUN mvn clean install
+
 FROM tomcat:8.0
 
 # Setup MedRec Data Source
@@ -6,4 +12,4 @@ RUN echo '<Context><Valve className="org.apache.catalina.valves.rewrite.RewriteV
 # Add MySQL connector
 RUN wget -P $CATALINA_HOME/lib http://central.maven.org/maven2/mysql/mysql-connector-java/5.1.35/mysql-connector-java-5.1.35.jar
 
-ADD target/liquibase-example-*.war $CATALINA_HOME/webapps/medrec.war
+COPY --from=build /src/target/liquibase-example-*.war $CATALINA_HOME/webapps/medrec.war
