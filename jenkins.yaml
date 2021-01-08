@@ -9,7 +9,7 @@ pipeline:
   stages:
     - stage: "build"
       steps:
-        - scm checkout
+        - checkout scm
         - sh "mvn clean package"
     # 3. Unit test
     - stage: "test"
