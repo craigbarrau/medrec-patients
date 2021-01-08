@@ -1,5 +1,38 @@
 # https://plugins.jenkins.io/pipeline-as-yaml/
 
+#! pipeline:
+#!  # Define Agent. Master will be used for this pipeline
+#!  agent:
+#!    label: 'master'
+#!  # Define tool for Maven. This tool must be defined in Jenkins configuration
+#!  tools:
+#!    maven: default
+#!  # Defines stages
+#!  stages:
+#!    # Define checkout stage
+#!    - stage: Checkout
+#!      # Define steps
+#!      steps:
+#!        # Use any step from Pipeline Syntax Page. 'git' steps is used for checkout
+#!        - git 'https://github.com/aytuncbeken/pipeline-as-yaml-tutorials.git'
+#!    # Define Maven Stage
+#!    - stage: Maven
+#!      # Define Sequential Staget
+#!      stages:
+#!        - stage: Build
+#!          steps:
+#!            # Use 'sh' step for running maven commands
+#!            - sh 'mvn clean compile'
+#!        - stage: Test
+#!          steps:
+#!            # Use script as well
+#!            script:
+#!              - sh "mvn clean test"
+#!  # Define post actions
+#!  post:
+#!    always:
+#!      - cleanWs()
+
 pipeline:
   agent:
     docker:
@@ -9,7 +42,8 @@ pipeline:
   stages:
     - stage: "build"
       steps:
-        - sh "ls -la"
+        - git 'https://github.com/m0un10/medrec-patients.git'
+        - git checkout jenkins-poc
         - sh "mvn clean package"
     # 3. Unit test
     - stage: "test"
