@@ -38,12 +38,12 @@ pipeline:
     docker:
       image: maven:3.3.3
       # 2. Reusing the node (double-check that this doesn't happen automatically)
-      #reuseNode: true
+      reuseNode: 'true'
   stages:
     - stage: "build"
       steps:
-        - git 'https://github.com/m0un10/medrec-patients.git'
-        - git checkout jenkins-poc
+        # This is a workaround for pipeline as yaml
+        - "checkout([$class: 'GitSCM', branches: [[name: '*/jenkins-poc']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'example-cred', url: 'https://github.com/m0un10/medrec-patients.git']]])"
         - sh "mvn clean package"
     # 3. Unit test
     - stage: "test"
